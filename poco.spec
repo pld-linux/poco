@@ -41,8 +41,7 @@ Statyczna biblioteka poco.
 %setup -q
 
 %build
-%configure \
-	--no-sharedmemory
+%configure
 
 %{__make} \
 	CC="%{__cc}" \
