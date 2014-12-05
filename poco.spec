@@ -11,7 +11,9 @@ URL:		http://pocoproject.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Modern, powerful open source C++ class libraries and frameworks for building network- and internet-based applications that run on desktop, server and embedded systems.
+Modern, powerful open source C++ class libraries and frameworks for
+building network- and internet-based applications that run on desktop,
+server and embedded systems.
 
 %package devel
 Summary:	Header files for FOO library
@@ -42,7 +44,6 @@ Statyczna biblioteka poco.
 
 %build
 %configure
-
 %{__make} \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
@@ -52,7 +53,6 @@ Statyczna biblioteka poco.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
