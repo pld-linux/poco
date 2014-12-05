@@ -53,6 +53,71 @@ Statyczna biblioteka poco.
 %prep
 %setup -q
 
+%{__sed} -i -e 's|$(INSTALLDIR)/lib\b|$(INSTALLDIR)/%{_lib}|g' Makefile
+#%{__sed} -i -e 's|ODBCLIBDIR = /usr/lib\b|ODBCLIBDIR = %{_libdir}|g' Data/ODBC/Makefile Data/ODBC/testsuite/Makefile
+%{__sed} -i -e 's|flags=""|flags="%{optflags}"|g' configure
+%{__sed} -i -e 's|SHAREDOPT_LINK  = -Wl,-rpath,$(LIBPATH)|SHAREDOPT_LINK  =|g' build/config/Linux
+%{__sed} -i -e 's|#endif|#define POCO_UNBUNDLED 1\n\n#endif|g' Foundation/include/Poco/Config.h
+#%{__sed} -i -e 's|"Poco/zlib.h"|<zlib.h>|g' Zip/src/ZipStream.cpp
+
+%{__rm} Foundation/src/MSG00001.bin
+%{__rm} Foundation/include/Poco/zconf.h
+%{__rm} Foundation/include/Poco/zlib.h
+%{__rm} Foundation/src/adler32.c
+%{__rm} Foundation/src/compress.c
+%{__rm} Foundation/src/crc32.c
+%{__rm} Foundation/src/crc32.h
+%{__rm} Foundation/src/deflate.c
+%{__rm} Foundation/src/deflate.h
+%{__rm} Foundation/src/gzio.c
+%{__rm} Foundation/src/infback.c
+%{__rm} Foundation/src/inffast.c
+%{__rm} Foundation/src/inffast.h
+%{__rm} Foundation/src/inffixed.h
+%{__rm} Foundation/src/inflate.c
+%{__rm} Foundation/src/inflate.h
+%{__rm} Foundation/src/inftrees.c
+%{__rm} Foundation/src/inftrees.h
+%{__rm} Foundation/src/trees.c
+%{__rm} Foundation/src/trees.h
+%{__rm} Foundation/src/zconf.h
+%{__rm} Foundation/src/zlib.h
+%{__rm} Foundation/src/zutil.c
+%{__rm} Foundation/src/zutil.h
+%{__rm} Foundation/src/pcre.h
+%{__rm} Foundation/src/pcre_chartables.c
+%{__rm} Foundation/src/pcre_compile.c
+%{__rm} Foundation/src/pcre_exec.c
+%{__rm} Foundation/src/pcre_fullinfo.c
+%{__rm} Foundation/src/pcre_globals.c
+%{__rm} Foundation/src/pcre_maketables.c
+%{__rm} Foundation/src/pcre_newline.c
+%{__rm} Foundation/src/pcre_ord2utf8.c
+%{__rm} Foundation/src/pcre_study.c
+%{__rm} Foundation/src/pcre_try_flipped.c
+%{__rm} Foundation/src/pcre_valid_utf8.c
+%{__rm} Foundation/src/pcre_xclass.c
+#%{__rm} Data/SQLite/src/sqlite3.h
+#%{__rm} Data/SQLite/src/sqlite3.c
+%{__rm} XML/include/Poco/XML/expat.h
+%{__rm} XML/include/Poco/XML/expat_external.h
+%{__rm} XML/src/ascii.h
+%{__rm} XML/src/asciitab.h
+%{__rm} XML/src/expat_config.h
+%{__rm} XML/src/iasciitab.h
+%{__rm} XML/src/internal.h
+%{__rm} XML/src/latin1tab.h
+%{__rm} XML/src/nametab.h
+%{__rm} XML/src/utf8tab.h
+%{__rm} XML/src/xmlparse.cpp
+%{__rm} XML/src/xmlrole.c
+%{__rm} XML/src/xmlrole.h
+%{__rm} XML/src/xmltok.c
+%{__rm} XML/src/xmltok.h
+%{__rm} XML/src/xmltok_impl.c
+%{__rm} XML/src/xmltok_impl.h
+%{__rm} XML/src/xmltok_ns.c
+
 %build
 # NOTE: not autoconf based configure
 ./configure \
