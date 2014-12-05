@@ -1,3 +1,5 @@
+# TODO
+# - split separate -debug-devel?
 #
 # Conditional build:
 %bcond_without	tests		# build without tests
@@ -24,18 +26,130 @@ BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Modern, powerful open source C++ class libraries and frameworks for
-building network- and internet-based applications that run on desktop,
-server and embedded systems.
+The POCO C++ Libraries (POCO stands for POrtable COmponents) are open
+source C++ class libraries that simplify and accelerate the
+development of network-centric, portable applications in C++. The POCO
+C++ Libraries are built strictly on standard ANSI/ISO C++, including
+the standard library.
+
+%package foundation
+Summary:	The Foundation POCO component
+Group:		Libraries
+
+%description foundation
+This package contains the Foundation component of POCO. (POCO is a set
+of C++ class libraries for network-centric applications.)
+
+%package xml
+Summary:	The XML POCO component
+Group:		Libraries
+
+%description xml
+This package contains the XML component of POCO. (POCO is a set of C++
+class libraries for network-centric applications.)
+
+%package util
+Summary:	The Util POCO component
+Group:		Libraries
+
+%description util
+This package contains the Util component of POCO. (POCO is a set of
+C++ class libraries for network-centric applications.)
+
+%package net
+Summary:	The Net POCO component
+Group:		Libraries
+
+%description net
+This package contains the Net component of POCO. (POCO is a set of C++
+class libraries for network-centric applications.)
+
+%package crypto
+Summary:	The Crypto POCO component
+Group:		Libraries
+
+%description crypto
+This package contains the Crypto component of POCO. (POCO is a set of
+C++ class libraries for network-centric applications.)
+
+%package netssl
+Summary:	The NetSSL POCO component
+Group:		Libraries
+
+%description netssl
+This package contains the NetSSL component of POCO. (POCO is a set of
+C++ class libraries for network-centric applications.)
+
+%package data
+Summary:	The Data POCO component
+Group:		Libraries
+
+%description data
+This package contains the Data component of POCO. (POCO is a set of
+C++ class libraries for network-centric applications.)
+
+%package sqlite
+Summary:	The Data/SQLite POCO component
+Group:		Libraries
+
+%description sqlite
+This package contains the Data/SQLite component of POCO. (POCO is a
+set of C++ class libraries for network-centric applications.)
+
+%package odbc
+Summary:	The Data/ODBC POCO component
+Group:		Libraries
+
+%description odbc
+This package contains the Data/ODBC component of POCO. (POCO is a set
+of C++ class libraries for network-centric applications.)
+
+%package mysql
+Summary:	The Data/MySQL POCO component
+Group:		Libraries
+
+%description mysql
+This package contains the Data/MySQL component of POCO. (POCO is a set
+of C++ class libraries for network-centric applications.)
+
+%package zip
+Summary:	The Zip POCO component
+Group:		Libraries
+Group:		Libraries
+
+%description zip
+This package contains the Zip component of POCO. (POCO is a set of C++
+class libraries for network-centric applications.)
 
 %package devel
-Summary:	Header files for POCO C++ libraries
+Summary:	Headers for developing programs that will use POCO
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki POCO C++
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-crypto = %{version}-%{release}
+Requires:	%{name}-data = %{version}-%{release}
+Requires:	%{name}-debug = %{version}-%{release}
+Requires:	%{name}-foundation = %{version}-%{release}
+Requires:	%{name}-mysql = %{version}-%{release}
+Requires:	%{name}-net = %{version}-%{release}
+Requires:	%{name}-netssl = %{version}-%{release}
+Requires:	%{name}-odbc = %{version}-%{release}
+Requires:	%{name}-pagecompiler = %{version}-%{release}
+Requires:	%{name}-sqlite = %{version}-%{release}
+Requires:	%{name}-util = %{version}-%{release}
+Requires:	%{name}-xml = %{version}-%{release}
+Requires:	%{name}-zip = %{version}-%{release}
+Requires:	expat-devel
+Requires:	zlib-devel
 
 %description devel
-Header files for POCO C++ libraries.
+The POCO C++ Libraries (POCO stands for POrtable COmponents) are open
+source C++ class libraries that simplify and accelerate the
+development of network-centric, portable applications in C++. The POCO
+C++ Libraries are built strictly on standard ANSI/ISO C++, including
+the standard library.
+
+This package contains the header files needed for developing POCO
+applications.
 
 %description devel -l pl.UTF-8
 Pliki nagłówkowe biblioteki POCO C++.
@@ -51,6 +165,22 @@ Static POCO C++ libraries.
 
 %description static -l pl.UTF-8
 Statyczna biblioteka POCO C++.
+
+%package pagecompiler
+Summary:	The PageCompiler POCO component
+Group:		Libraries
+
+%description pagecompiler
+This package contains the PageCompiler component of POCO. (POCO is a
+set of C++ class libraries for network-centric applications.)
+
+%package debug
+Summary:	Debug builds of the POCO libraries
+Group:		Development/Libraries
+
+%description debug
+This package contains the debug builds of the POCO libraries for
+application testing purposes.
 
 %prep
 %setup -q -n %{name}-%{version}-all
@@ -150,43 +280,113 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
+%post	foundation -p /sbin/ldconfig
+%postun	foundation -p /sbin/ldconfig
+
+%post	xml -p /sbin/ldconfig
+%postun	xml -p /sbin/ldconfig
+
+%post	util -p /sbin/ldconfig
+%postun	util -p /sbin/ldconfig
+
+%post	net -p /sbin/ldconfig
+%postun	net -p /sbin/ldconfig
+
+%post	crypto -p /sbin/ldconfig
+%postun	crypto -p /sbin/ldconfig
+
+%post	netssl -p /sbin/ldconfig
+%postun	netssl -p /sbin/ldconfig
+
+%post	data -p /sbin/ldconfig
+%postun	data -p /sbin/ldconfig
+
+%post	sqlite -p /sbin/ldconfig
+%postun	sqlite -p /sbin/ldconfig
+
+%post	odbc -p /sbin/ldconfig
+%postun	odbc -p /sbin/ldconfig
+
+%post	mysql -p /sbin/ldconfig
+%postun	mysql -p /sbin/ldconfig
+
+%post	zip -p /sbin/ldconfig
+%postun	zip -p /sbin/ldconfig
+
+%post	debug -p /sbin/ldconfig
+%postun	debug -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG CONTRIBUTORS README
-%attr(755,root,root) %{_bindir}/cpspc
-%attr(755,root,root) %{_bindir}/cpspcd
-%attr(755,root,root) %{_bindir}/f2cpsp
-%attr(755,root,root) %{_bindir}/f2cpspd
+
+%files foundation
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoFoundation.so.17
+
+%files xml
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoXML.so.17
+
+%files util
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoUtil.so.17
+
+%files net
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoNet.so.17
+
+%files crypto
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libPocoCrypto.so.17
-%attr(755,root,root) %{_libdir}/libPocoCryptod.so.17
+
+%files netssl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoNetSSL.so.17
+
+%files data
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libPocoData.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataMySQL.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataMySQLd.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataODBC.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataODBCd.so.17
+
+%files sqlite
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libPocoDataSQLite.so.17
+
+%files odbc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoDataODBC.so.17
+
+%files mysql
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoDataMySQL.so.17
+
+%files zip
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoZip.so.17
+
+%files pagecompiler
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/cpspc
+%attr(755,root,root) %{_bindir}/f2cpsp
+
+%files debug
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/cpspcd
+%attr(755,root,root) %{_bindir}/f2cpspd
+%attr(755,root,root) %{_libdir}/libPocoCryptod.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataMySQLd.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataODBCd.so.17
 %attr(755,root,root) %{_libdir}/libPocoDataSQLited.so.17
 %attr(755,root,root) %{_libdir}/libPocoDatad.so.17
-%attr(755,root,root) %{_libdir}/libPocoFoundation.so.17
 %attr(755,root,root) %{_libdir}/libPocoFoundationd.so.17
-%attr(755,root,root) %{_libdir}/libPocoNet.so.17
-%attr(755,root,root) %{_libdir}/libPocoNetSSL.so
-%attr(755,root,root) %{_libdir}/libPocoNetSSL.so.17
-%attr(755,root,root) %{_libdir}/libPocoNetSSLd.so
 %attr(755,root,root) %{_libdir}/libPocoNetSSLd.so.17
 %attr(755,root,root) %{_libdir}/libPocoNetd.so.17
-%attr(755,root,root) %{_libdir}/libPocoUtil.so.17
 %attr(755,root,root) %{_libdir}/libPocoUtild.so.17
-%attr(755,root,root) %{_libdir}/libPocoXML.so.17
 %attr(755,root,root) %{_libdir}/libPocoXMLd.so.17
-%attr(755,root,root) %{_libdir}/libPocoZip.so.17
 %attr(755,root,root) %{_libdir}/libPocoZipd.so.17
 
 %files devel
 %defattr(644,root,root,755)
+%doc README NEWS LICENSE CONTRIBUTORS CHANGELOG doc/*
 %{_libdir}/libPocoCrypto.so
 %{_libdir}/libPocoCryptod.so
 %{_libdir}/libPocoData.so
@@ -200,6 +400,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libPocoFoundation.so
 %{_libdir}/libPocoFoundationd.so
 %{_libdir}/libPocoNet.so
+%{_libdir}/libPocoNetSSL.so
+%{_libdir}/libPocoNetSSLd.so
 %{_libdir}/libPocoNetd.so
 %{_libdir}/libPocoUtil.so
 %{_libdir}/libPocoUtild.so
