@@ -154,17 +154,47 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG CONTRIBUTORS README
-%attr(755,root,root) %{_libdir}/libPocoFoundation.so.11
-%attr(755,root,root) %{_libdir}/libPocoFoundationd.so.11
-%attr(755,root,root) %{_libdir}/libPocoNet.so.11
-%attr(755,root,root) %{_libdir}/libPocoNetd.so.11
-%attr(755,root,root) %{_libdir}/libPocoUtil.so.11
-%attr(755,root,root) %{_libdir}/libPocoUtild.so.11
-%attr(755,root,root) %{_libdir}/libPocoXML.so.11
-%attr(755,root,root) %{_libdir}/libPocoXMLd.so.11
+%attr(755,root,root) %{_bindir}/cpspc
+%attr(755,root,root) %{_bindir}/cpspcd
+%attr(755,root,root) %{_bindir}/f2cpsp
+%attr(755,root,root) %{_bindir}/f2cpspd
+%attr(755,root,root) %{_libdir}/libPocoCrypto.so.17
+%attr(755,root,root) %{_libdir}/libPocoCryptod.so.17
+%attr(755,root,root) %{_libdir}/libPocoData.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataMySQL.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataMySQLd.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataODBC.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataODBCd.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataSQLite.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataSQLited.so.17
+%attr(755,root,root) %{_libdir}/libPocoDatad.so.17
+%attr(755,root,root) %{_libdir}/libPocoFoundation.so.17
+%attr(755,root,root) %{_libdir}/libPocoFoundationd.so.17
+%attr(755,root,root) %{_libdir}/libPocoNet.so.17
+%attr(755,root,root) %{_libdir}/libPocoNetSSL.so
+%attr(755,root,root) %{_libdir}/libPocoNetSSL.so.17
+%attr(755,root,root) %{_libdir}/libPocoNetSSLd.so
+%attr(755,root,root) %{_libdir}/libPocoNetSSLd.so.17
+%attr(755,root,root) %{_libdir}/libPocoNetd.so.17
+%attr(755,root,root) %{_libdir}/libPocoUtil.so.17
+%attr(755,root,root) %{_libdir}/libPocoUtild.so.17
+%attr(755,root,root) %{_libdir}/libPocoXML.so.17
+%attr(755,root,root) %{_libdir}/libPocoXMLd.so.17
+%attr(755,root,root) %{_libdir}/libPocoZip.so.17
+%attr(755,root,root) %{_libdir}/libPocoZipd.so.17
 
 %files devel
 %defattr(644,root,root,755)
+%{_libdir}/libPocoCrypto.so
+%{_libdir}/libPocoCryptod.so
+%{_libdir}/libPocoData.so
+%{_libdir}/libPocoDataMySQL.so
+%{_libdir}/libPocoDataMySQLd.so
+%{_libdir}/libPocoDataODBC.so
+%{_libdir}/libPocoDataODBCd.so
+%{_libdir}/libPocoDataSQLite.so
+%{_libdir}/libPocoDataSQLited.so
+%{_libdir}/libPocoDatad.so
 %{_libdir}/libPocoFoundation.so
 %{_libdir}/libPocoFoundationd.so
 %{_libdir}/libPocoNet.so
@@ -173,4 +203,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libPocoUtild.so
 %{_libdir}/libPocoXML.so
 %{_libdir}/libPocoXMLd.so
+%{_libdir}/libPocoZip.so
+%{_libdir}/libPocoZipd.so
 %{_includedir}/Poco
