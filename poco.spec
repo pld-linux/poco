@@ -11,6 +11,7 @@ License:	Boost
 Group:		Libraries
 Source0:	http://pocoproject.org/releases/poco-1.4.7/%{name}-%{version}-all.tar.gz
 # Source0-md5:	12551b729456c985cffd14e977526c01
+Patch0:		pcre.patch
 URL:		http://pocoproject.org/
 BuildRequires:	expat-devel
 BuildRequires:	libiodbc-devel
@@ -53,6 +54,7 @@ Statyczna biblioteka POCO C++.
 
 %prep
 %setup -q -n %{name}-%{version}-all
+%patch0 -p1
 
 %{__sed} -i -e 's|$(INSTALLDIR)/lib\b|$(INSTALLDIR)/%{_lib}|g' Makefile
 %{__sed} -i -e 's|ODBCLIBDIR = /usr/lib\b|ODBCLIBDIR = %{_libdir}|g' Data/ODBC/Makefile Data/ODBC/testsuite/Makefile
