@@ -1,3 +1,8 @@
+#
+# Conditional build:
+%bcond_without	tests		# build without tests
+%bcond_without	samples		# build without tests
+
 Summary:	C++ class libraries and frameworks for building network- and internet-based applications
 Name:		poco
 Version:	1.4.2p1
@@ -7,7 +12,13 @@ Group:		Libraries
 Source0:	http://downloads.sourceforge.net/poco/%{name}-%{version}.tar.gz
 # Source0-md5:	d4f150b4a4365efccaae3e8263c0e368
 URL:		http://pocoproject.org/
-#BuildRequires:	-
+BuildRequires:	expat-devel
+BuildRequires:	libiodbc-devel
+BuildRequires:	mysql-devel
+BuildRequires:	openssl-devel
+BuildRequires:	pcre-devel
+BuildRequires:	sqlite3-devel
+BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -43,22 +54,30 @@ Statyczna biblioteka poco.
 %setup -q
 
 %build
-%configure
-%{__make} \
+# NOTE: not autoconf based configure
+./configure \
+	--prefix=%{_prefix} \
+	--unbundled \
+	%{!?with_tests:--no-tests} \
+	%{!?with_samples:--no-samples} \
+	--include-path=%{_includedir}/libiodbc \
+	--library-path=%{_libdir}/mysql
+
+# POCO_BASE needs to be absolute real path (symlinks confuse it)
+%{__make} -j1 \
+	POCO_BASE=$(readlink -f $(pwd)) \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags}" \
 	CXXFLAGS="%{rpmcxxflags}" \
 	LINKFLAGS="%{rpmldflags}"
+	STRIP=/bin/true
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__make} install \
+	POCO_BASE=$(readlink -f $(pwd)) \
 	DESTDIR=$RPM_BUILD_ROOT
-
-# if library provides pkgconfig file containing proper {Requires,Libs}.private
-# then remove .la pollution
-#%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -69,27 +88,23 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG CONTRIBUTORS README
-%if 0
-%attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/libFOO.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libFOO.so.N
-%{_datadir}/%{name}
-%endif
+%attr(755,root,root) %{_libdir}/libPocoFoundation.so.11
+%attr(755,root,root) %{_libdir}/libPocoFoundationd.so.11
+%attr(755,root,root) %{_libdir}/libPocoNet.so.11
+%attr(755,root,root) %{_libdir}/libPocoNetd.so.11
+%attr(755,root,root) %{_libdir}/libPocoUtil.so.11
+%attr(755,root,root) %{_libdir}/libPocoUtild.so.11
+%attr(755,root,root) %{_libdir}/libPocoXML.so.11
+%attr(755,root,root) %{_libdir}/libPocoXMLd.so.11
 
 %files devel
 %defattr(644,root,root,755)
-%if 0
-%doc devel-doc/*
-%attr(755,root,root) %{_libdir}/libFOO.so
-# if no pkgconfig support, or it misses .private deps, then include .la file
-#%{_libdir}/libFOO.la
-%{_includedir}/foo
-%{_aclocaldir}/FOO.m4
-%{_pkgconfigdir}/FOO.pc
-%endif
-
-%if %{with static_libs}
-%files static
-%defattr(644,root,root,755)
-#%%{_libdir}/libFOO.a
-%endif
+%{_libdir}/libPocoFoundation.so
+%{_libdir}/libPocoFoundationd.so
+%{_libdir}/libPocoNet.so
+%{_libdir}/libPocoNetd.so
+%{_libdir}/libPocoUtil.so
+%{_libdir}/libPocoUtild.so
+%{_libdir}/libPocoXML.so
+%{_libdir}/libPocoXMLd.so
+%{_includedir}/Poco
