@@ -115,7 +115,6 @@ of C++ class libraries for network-centric applications.)
 %package zip
 Summary:	The Zip POCO component
 Group:		Libraries
-Group:		Libraries
 
 %description zip
 This package contains the Zip component of POCO. (POCO is a set of C++
