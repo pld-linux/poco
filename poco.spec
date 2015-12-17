@@ -268,6 +268,9 @@ application testing purposes.
 %{__rm} XML/src/xmltok_impl.h
 %{__rm} XML/src/xmltok_ns.c
 
+# cleanup, makes easier to dig trough bbuild system
+find -regextype posix-extended -regex '.*\.(vc.?proj|sln|progen|cmd)' | xargs -r rm -v
+
 %build
 # NOTE: not autoconf based configure
 ./configure \
@@ -279,7 +282,8 @@ application testing purposes.
 	--library-path=%{_libdir}/mysql
 
 # POCO_BASE needs to be absolute real path (symlinks confuse it)
-%{__make} -j1 \
+%{__make} -j1 poco \
+	DEFAULT_TARGET=all_release \
 	POCO_BASE=$(readlink -f $(pwd)) \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
