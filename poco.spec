@@ -237,7 +237,7 @@ application testing purposes.
 %{__rm} Foundation/src/pcre_config.h
 %{__rm} Foundation/src/pcre_dfa_exec.c
 %{__rm} Foundation/src/pcre_get.c
-%{__rm} Foundation/src/pcre_internal.h
+#%{__rm} Foundation/src/pcre_internal.h
 %{__rm} Foundation/src/pcre_jit_compile.c
 %{__rm} Foundation/src/pcre_refcount.c
 %{__rm} Foundation/src/pcre_string_utils.c
