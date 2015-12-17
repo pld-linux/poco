@@ -7,12 +7,12 @@
 
 Summary:	C++ class libraries and frameworks for building network- and internet-based applications
 Name:		poco
-Version:	1.4.7p1
+Version:	1.6.1
 Release:	0.1
 License:	Boost
 Group:		Libraries
-Source0:	http://pocoproject.org/releases/poco-1.4.7/%{name}-%{version}-all.tar.gz
-# Source0-md5:	12551b729456c985cffd14e977526c01
+Source0:	http://pocoproject.org/releases/poco-%{version}/%{name}-%{version}-all.tar.gz
+# Source0-md5:	05961d10195d0f760b707752e88938e9
 Patch0:		pcre.patch
 URL:		http://pocoproject.org/
 BuildRequires:	expat-devel
@@ -192,6 +192,8 @@ application testing purposes.
 %{__sed} -i -e 's|#endif|#define POCO_UNBUNDLED 1\n\n#endif|g' Foundation/include/Poco/Config.h
 %{__sed} -i -e 's|"Poco/zlib.h"|<zlib.h>|g' Zip/src/ZipStream.cpp
 
+# the file lists came from Foundation/CMakeLists.txt
+
 %{__rm} Foundation/src/MSG00001.bin
 %{__rm} Foundation/include/Poco/zconf.h
 %{__rm} Foundation/include/Poco/zlib.h
@@ -216,6 +218,8 @@ application testing purposes.
 %{__rm} Foundation/src/zlib.h
 %{__rm} Foundation/src/zutil.c
 %{__rm} Foundation/src/zutil.h
+
+# Foundation/src/pcre* with manual overview
 %{__rm} Foundation/src/pcre.h
 %{__rm} Foundation/src/pcre_chartables.c
 %{__rm} Foundation/src/pcre_compile.c
@@ -226,13 +230,27 @@ application testing purposes.
 %{__rm} Foundation/src/pcre_newline.c
 %{__rm} Foundation/src/pcre_ord2utf8.c
 %{__rm} Foundation/src/pcre_study.c
-%{__rm} Foundation/src/pcre_try_flipped.c
 %{__rm} Foundation/src/pcre_valid_utf8.c
 %{__rm} Foundation/src/pcre_xclass.c
+%{__rm} Foundation/src/pcre_byte_order.c
+%{__rm} Foundation/src/pcre_config.c
+%{__rm} Foundation/src/pcre_config.h
+%{__rm} Foundation/src/pcre_dfa_exec.c
+%{__rm} Foundation/src/pcre_get.c
+%{__rm} Foundation/src/pcre_internal.h
+%{__rm} Foundation/src/pcre_jit_compile.c
+%{__rm} Foundation/src/pcre_refcount.c
+%{__rm} Foundation/src/pcre_string_utils.c
+%{__rm} Foundation/src/pcre_tables.c
+%{__rm} Foundation/src/pcre_ucd.c
+%{__rm} Foundation/src/pcre_version.c
+
 %{__rm} Data/SQLite/src/sqlite3.h
 %{__rm} Data/SQLite/src/sqlite3.c
+
 %{__rm} XML/include/Poco/XML/expat.h
 %{__rm} XML/include/Poco/XML/expat_external.h
+
 %{__rm} XML/src/ascii.h
 %{__rm} XML/src/asciitab.h
 %{__rm} XML/src/expat_config.h
