@@ -1,0 +1,149 @@
+--- poco-1.6.1-all/build/config/Linux.orig	2016-03-06 12:23:25.000000000 +0100
++++ poco-1.6.1-all/build/config/Linux	2016-03-06 15:17:01.123833319 +0100
+@@ -68,4 +68,4 @@
+ #
+ # System Specific Libraries
+ #
+-SYSLIBS  = -lpthread -ldl -lrt
++SYSLIBS  = -pthread -ldl -lrt
+--- poco-1.6.1-all/Foundation/include/Poco/RegularExpression.h.orig	2015-08-04 07:20:55.000000000 +0200
++++ poco-1.6.1-all/Foundation/include/Poco/RegularExpression.h	2016-03-05 21:50:13.634745461 +0100
+@@ -26,7 +26,9 @@
+ #include "Poco/Foundation.h"
+ #include <vector>
+ 
+-
++#if defined(POCO_UNBUNDLED)
++#include <pcre.h>
++#else
+ //
+ // Copy these definitions from pcre.h
+ // to avoid pulling in the entire header file
+@@ -37,7 +39,7 @@
+ 	typedef struct real_pcre8_or_16 pcre;
+ 	struct pcre_extra;
+ }
+-
++#endif
+ 
+ namespace Poco {
+ 
+--- poco-1.6.1-all/Net/testsuite/Makefile.orig	2015-08-04 07:21:00.000000000 +0200
++++ poco-1.6.1-all/Net/testsuite/Makefile	2016-03-06 13:22:05.393678530 +0100
+@@ -37,5 +37,5 @@
+ include $(POCO_BASE)/build/rules/exec
+ 
+ ifdef POCO_UNBUNDLED
+-        SYSLIBS += -lz
++        SYSLIBS += -lz -lpcre
+ endif
+--- poco-1.6.1-all/NetSSL_OpenSSL/testsuite/Makefile.orig	2015-08-04 07:21:02.000000000 +0200
++++ poco-1.6.1-all/NetSSL_OpenSSL/testsuite/Makefile	2016-03-06 13:31:19.920357644 +0100
+@@ -24,3 +24,7 @@
+ target_libs    = PocoNetSSL PocoNet PocoCrypto PocoUtil PocoJSON PocoXML PocoFoundation CppUnit
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lpcre -lexpat
++endif
+--- poco-1.6.1-all/Data/SQLite/testsuite/Makefile.orig	2015-08-04 07:21:04.000000000 +0200
++++ poco-1.6.1-all/Data/SQLite/testsuite/Makefile	2016-03-06 13:37:47.430366343 +0100
+@@ -16,3 +16,7 @@
+ target_libs    = PocoDataSQLite PocoData PocoFoundation CppUnit
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lsqlite3
++endif
+--- poco-1.6.1-all/Data/MySQL/testsuite/Makefile.orig	2015-08-04 07:21:04.000000000 +0200
++++ poco-1.6.1-all/Data/MySQL/testsuite/Makefile	2016-03-06 14:11:08.043744584 +0100
+@@ -20,3 +20,7 @@
+ target_libs    = PocoDataMySQL PocoData PocoFoundation CppUnit
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lssl -lcrypto
++endif
+--- poco-1.6.1-all/MongoDB/testsuite/Makefile.orig	2015-08-04 07:21:05.000000000 +0200
++++ poco-1.6.1-all/MongoDB/testsuite/Makefile	2016-03-06 14:25:21.713763747 +0100
+@@ -12,6 +12,6 @@
+ 
+ target         = testrunner
+ target_version = 1
+-target_libs    = PocoMongoDB PocoFoundation PocoNet CppUnit
++target_libs    = PocoMongoDB PocoNet PocoFoundation CppUnit
+ 
+ include $(POCO_BASE)/build/rules/exec
+--- poco-1.6.1-all/Zip/testsuite/Makefile.orig	2015-08-04 07:21:05.000000000 +0200
++++ poco-1.6.1-all/Zip/testsuite/Makefile	2016-03-06 14:28:01.057100657 +0100
+@@ -16,3 +16,7 @@
+ target_libs    = PocoZip PocoNet PocoFoundation CppUnit
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lz
++endif
+--- poco-1.6.1-all/Net/samples/httpget/Makefile.orig	2015-08-04 07:21:01.000000000 +0200
++++ poco-1.6.1-all/Net/samples/httpget/Makefile	2016-03-06 16:14:54.937244628 +0100
+@@ -15,3 +15,7 @@
+ target_libs    = PocoUtil PocoNet PocoXML PocoFoundation
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lpcre
++endif
+--- poco-1.6.1-all/Net/samples/download/Makefile.orig	2015-08-04 07:21:01.000000000 +0200
++++ poco-1.6.1-all/Net/samples/download/Makefile	2016-03-06 16:17:39.090581646 +0100
+@@ -15,3 +15,7 @@
+ target_libs    = PocoUtil PocoNet PocoXML PocoFoundation
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lpcre
++endif
+--- poco-1.6.1-all/NetSSL_OpenSSL/samples/download/Makefile.orig	2015-08-04 07:21:02.000000000 +0200
++++ poco-1.6.1-all/NetSSL_OpenSSL/samples/download/Makefile	2016-03-06 16:21:43.380587130 +0100
+@@ -22,3 +22,7 @@
+ target_libs    = PocoNetSSL PocoCrypto PocoNet PocoUtil PocoJSON PocoXML PocoFoundation
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lpcre
++endif
+--- poco-1.6.1-all/NetSSL_OpenSSL/samples/Mail/Makefile.orig	2015-08-04 07:21:02.000000000 +0200
++++ poco-1.6.1-all/NetSSL_OpenSSL/samples/Mail/Makefile	2016-03-06 16:23:56.090590109 +0100
+@@ -22,3 +22,7 @@
+ target_libs    = PocoNetSSL PocoNet PocoCrypto PocoUtil PocoJSON PocoXML PocoFoundation
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lpcre
++endif
+--- poco-1.6.1-all/Data/samples/RowFormatter/Makefile.orig	2015-08-04 07:21:03.000000000 +0200
++++ poco-1.6.1-all/Data/samples/RowFormatter/Makefile	2016-03-06 16:31:35.680600426 +0100
+@@ -15,3 +15,7 @@
+ target_libs    = PocoDataSQLite PocoData PocoFoundation 
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lsqlite3
++endif
+--- poco-1.6.1-all/Data/samples/WebNotifier/Makefile.orig	2015-08-04 07:21:03.000000000 +0200
++++ poco-1.6.1-all/Data/samples/WebNotifier/Makefile	2016-03-06 16:34:05.787270462 +0100
+@@ -15,3 +15,7 @@
+ target_libs    = PocoDataSQLite PocoData PocoNet PocoFoundation
+ 
+ include $(POCO_BASE)/build/rules/exec
++
++ifdef POCO_UNBUNDLED
++        SYSLIBS += -lsqlite3
++endif

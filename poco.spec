@@ -5,6 +5,8 @@
 %bcond_without	tests		# build without tests
 %bcond_without	samples		# build without tests
 
+%define		so_version 31
+
 Summary:	C++ class libraries and frameworks for building network- and internet-based applications
 Name:		poco
 Version:	1.6.1
@@ -14,15 +16,25 @@ Group:		Libraries
 Source0:	http://pocoproject.org/releases/poco-%{version}/%{name}-%{version}-all.tar.gz
 # Source0-md5:	05961d10195d0f760b707752e88938e9
 Patch0:		pcre.patch
+Patch1:		unbundled.patch
 URL:		http://pocoproject.org/
 BuildRequires:	expat-devel
-BuildRequires:	libiodbc-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	mysql-devel
 BuildRequires:	openssl-devel
 BuildRequires:	pcre-devel
 BuildRequires:	sqlite3-devel
+BuildRequires:	unixODBC-devel
 BuildRequires:	zlib-devel
+BuildRequires:	glibc-static
+BuildRequires:	expat-static
+BuildRequires:	libltdl-static
+BuildRequires:	libstdc++-static
+BuildRequires:	mysql-static
+BuildRequires:	openssl-static
+BuildRequires:	pcre-static
+BuildRequires:	sqlite3-static
+BuildRequires:	unixODBC-static
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -120,6 +132,22 @@ Group:		Libraries
 This package contains the Zip component of POCO. (POCO is a set of C++
 class libraries for network-centric applications.)
 
+%package json
+Summary:	The JSON POCO component
+Group:		Libraries
+
+%description json
+This package contains the JSON component of POCO. (POCO is a set of C++
+class libraries for network-centric applications.)
+
+%package mongodb
+Summary:	The MongoDB POCO component
+Group:		Libraries
+
+%description mongodb
+This package contains the MongoDB component of POCO. (POCO is a set of C++
+class libraries for network-centric applications.)
+
 %package devel
 Summary:	Headers for developing programs that will use POCO
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki POCO C++
@@ -128,6 +156,8 @@ Requires:	%{name}-crypto = %{version}-%{release}
 Requires:	%{name}-data = %{version}-%{release}
 Requires:	%{name}-debug = %{version}-%{release}
 Requires:	%{name}-foundation = %{version}-%{release}
+Requires:	%{name}-json = %{version}-%{release}
+Requires:	%{name}-mongodb = %{version}-%{release}
 Requires:	%{name}-mysql = %{version}-%{release}
 Requires:	%{name}-net = %{version}-%{release}
 Requires:	%{name}-netssl = %{version}-%{release}
@@ -184,6 +214,7 @@ application testing purposes.
 %prep
 %setup -q -n %{name}-%{version}-all
 %patch0 -p1
+%patch1 -p1
 
 %{__sed} -i -e 's|$(INSTALLDIR)/lib\b|$(INSTALLDIR)/%{_lib}|g' Makefile
 %{__sed} -i -e 's|ODBCLIBDIR = /usr/lib\b|ODBCLIBDIR = %{_libdir}|g' Data/ODBC/Makefile Data/ODBC/testsuite/Makefile
@@ -220,7 +251,7 @@ application testing purposes.
 %{__rm} Foundation/src/zutil.h
 
 # Foundation/src/pcre* with manual overview
-%{__rm} Foundation/src/pcre.h
+#%{__rm} Foundation/src/pcre.h
 %{__rm} Foundation/src/pcre_chartables.c
 %{__rm} Foundation/src/pcre_compile.c
 %{__rm} Foundation/src/pcre_exec.c
@@ -234,15 +265,15 @@ application testing purposes.
 %{__rm} Foundation/src/pcre_xclass.c
 %{__rm} Foundation/src/pcre_byte_order.c
 %{__rm} Foundation/src/pcre_config.c
-%{__rm} Foundation/src/pcre_config.h
+#%{__rm} Foundation/src/pcre_config.h
 %{__rm} Foundation/src/pcre_dfa_exec.c
 %{__rm} Foundation/src/pcre_get.c
 #%{__rm} Foundation/src/pcre_internal.h
 %{__rm} Foundation/src/pcre_jit_compile.c
 %{__rm} Foundation/src/pcre_refcount.c
 %{__rm} Foundation/src/pcre_string_utils.c
-%{__rm} Foundation/src/pcre_tables.c
-%{__rm} Foundation/src/pcre_ucd.c
+#%{__rm} Foundation/src/pcre_tables.c
+#%{__rm} Foundation/src/pcre_ucd.c
 %{__rm} Foundation/src/pcre_version.c
 
 %{__rm} Data/SQLite/src/sqlite3.h
@@ -278,7 +309,6 @@ find -regextype posix-extended -regex '.*\.(vc.?proj|sln|progen|cmd)' | xargs -r
 	--unbundled \
 	%{!?with_tests:--no-tests} \
 	%{!?with_samples:--no-samples} \
-	--include-path=%{_includedir}/libiodbc \
 	--library-path=%{_libdir}/mysql
 
 # POCO_BASE needs to be absolute real path (symlinks confuse it)
@@ -289,7 +319,7 @@ find -regextype posix-extended -regex '.*\.(vc.?proj|sln|progen|cmd)' | xargs -r
 	CXX="%{__cxx}" \
 	CFLAGS="%{rpmcflags}" \
 	CXXFLAGS="%{rpmcxxflags}" \
-	LINKFLAGS="%{rpmldflags}"
+	LINKFLAGS="%{rpmldflags}" \
 	STRIP=/bin/true
 
 %install
@@ -334,6 +364,12 @@ rm -rf $RPM_BUILD_ROOT
 %post	zip -p /sbin/ldconfig
 %postun	zip -p /sbin/ldconfig
 
+%post	json -p /sbin/ldconfig
+%postun	json -p /sbin/ldconfig
+
+%post	mongodb -p /sbin/ldconfig
+%postun	mongodb -p /sbin/ldconfig
+
 %post	debug -p /sbin/ldconfig
 %postun	debug -p /sbin/ldconfig
 
@@ -342,47 +378,55 @@ rm -rf $RPM_BUILD_ROOT
 
 %files foundation
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoFoundation.so.17
+%attr(755,root,root) %{_libdir}/libPocoFoundation.so.%{so_version}
 
 %files xml
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoXML.so.17
+%attr(755,root,root) %{_libdir}/libPocoXML.so.%{so_version}
 
 %files util
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoUtil.so.17
+%attr(755,root,root) %{_libdir}/libPocoUtil.so.%{so_version}
 
 %files net
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoNet.so.17
+%attr(755,root,root) %{_libdir}/libPocoNet.so.%{so_version}
 
 %files crypto
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoCrypto.so.17
+%attr(755,root,root) %{_libdir}/libPocoCrypto.so.%{so_version}
 
 %files netssl
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoNetSSL.so.17
+%attr(755,root,root) %{_libdir}/libPocoNetSSL.so.%{so_version}
 
 %files data
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoData.so.17
+%attr(755,root,root) %{_libdir}/libPocoData.so.%{so_version}
 
 %files sqlite
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoDataSQLite.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataSQLite.so.%{so_version}
 
 %files odbc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoDataODBC.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataODBC.so.%{so_version}
 
 %files mysql
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoDataMySQL.so.17
+%attr(755,root,root) %{_libdir}/libPocoDataMySQL.so.%{so_version}
 
 %files zip
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libPocoZip.so.17
+%attr(755,root,root) %{_libdir}/libPocoZip.so.%{so_version}
+
+%files json
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoJSON.so.%{so_version}
+
+%files mongodb
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libPocoMongoDB.so.%{so_version}
 
 %files pagecompiler
 %defattr(644,root,root,755)
@@ -393,17 +437,19 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/cpspcd
 %attr(755,root,root) %{_bindir}/f2cpspd
-%attr(755,root,root) %{_libdir}/libPocoCryptod.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataMySQLd.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataODBCd.so.17
-%attr(755,root,root) %{_libdir}/libPocoDataSQLited.so.17
-%attr(755,root,root) %{_libdir}/libPocoDatad.so.17
-%attr(755,root,root) %{_libdir}/libPocoFoundationd.so.17
-%attr(755,root,root) %{_libdir}/libPocoNetSSLd.so.17
-%attr(755,root,root) %{_libdir}/libPocoNetd.so.17
-%attr(755,root,root) %{_libdir}/libPocoUtild.so.17
-%attr(755,root,root) %{_libdir}/libPocoXMLd.so.17
-%attr(755,root,root) %{_libdir}/libPocoZipd.so.17
+%attr(755,root,root) %{_libdir}/libPocoCryptod.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoDataMySQLd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoDataODBCd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoDataSQLited.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoDatad.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoFoundationd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoJSONd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoMongoDBd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoNetSSLd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoNetd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoUtild.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoXMLd.so.%{so_version}
+%attr(755,root,root) %{_libdir}/libPocoZipd.so.%{so_version}
 
 %files devel
 %defattr(644,root,root,755)
@@ -420,6 +466,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libPocoDatad.so
 %{_libdir}/libPocoFoundation.so
 %{_libdir}/libPocoFoundationd.so
+%{_libdir}/libPocoJSON.so
+%{_libdir}/libPocoJSONd.so
+%{_libdir}/libPocoMongoDB.so
+%{_libdir}/libPocoMongoDBd.so
 %{_libdir}/libPocoNet.so
 %{_libdir}/libPocoNetSSL.so
 %{_libdir}/libPocoNetSSLd.so
@@ -431,3 +481,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libPocoZip.so
 %{_libdir}/libPocoZipd.so
 %{_includedir}/Poco
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libPocoCrypto.a
+%{_libdir}/libPocoData.a
+%{_libdir}/libPocoDataMySQL.a
+%{_libdir}/libPocoDataODBC.a
+%{_libdir}/libPocoDataSQLite.a
+%{_libdir}/libPocoFoundation.a
+%{_libdir}/libPocoJSON.a
+%{_libdir}/libPocoMongoDB.a
+%{_libdir}/libPocoNet.a
+%{_libdir}/libPocoNetSSL.a
+%{_libdir}/libPocoUtil.a
+%{_libdir}/libPocoXML.a
+%{_libdir}/libPocoZip.a

@@ -39,7 +39,7 @@ diff --git a/Foundation/src/pcre_internal.h b/Foundation/src/pcre_internal.h
 index f3e69fc..c6f1d44 100644
 --- a/Foundation/src/pcre_internal.h
 +++ b/Foundation/src/pcre_internal.h
-@@ -2636,6 +2636,17 @@ typedef struct {
+@@ -2636,6 +2636,20 @@ typedef struct {
  } ucp_type_table;
  
  
@@ -53,11 +53,14 @@ index f3e69fc..c6f1d44 100644
 +#define _pcre_utt_size         _poco__pcre_utt_size
 +#define _pcre_utt_names        _poco__pcre_utt_names
 +#define _pcre_OP_lengths       _poco__pcre_OP_lengths
++#define _pcre_ucp_gbtable      _poco__pcre_ucp_gbtable
++#define _pcre_vspace_list      _poco__pcre_vspace_list
++#define _pcre_hspace_list      _poco__pcre_hspace_list
 +
  /* Internal shared data tables. These are tables that are used by more than one
  of the exported public functions. They have to be "external" in the C sense,
  but are not part of the PCRE public API. The data for these tables is in the
-@@ -2749,6 +2760,12 @@ typedef struct {
+@@ -2749,6 +2763,13 @@ typedef struct {
    pcre_int32 other_case; /* offset to other case, or zero if none */
  } ucd_record;
  
@@ -66,6 +69,7 @@ index f3e69fc..c6f1d44 100644
 +#define _pcre_ucd_stage1 _poco__pcre_ucd_stage1
 +#define _pcre_ucd_stage2 _poco__pcre_ucd_stage2
 +#define _pcre_ucp_gentype _poco__pcre_ucp_gentype
++#define _pcre_ucd_caseless_sets _poco__pcre_ucd_caseless_sets
 +
  extern const pcre_uint32 PRIV(ucd_caseless_sets)[];
  extern const ucd_record  PRIV(ucd_records)[];
